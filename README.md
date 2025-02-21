@@ -1,5 +1,3 @@
-Below is a comprehensive README file for your Akello project. This README covers an overview, features, installation instructions (including using Anaconda and ngrok), usage guidelines, deployment tips, and contribution details. You can copy and save this as README.md in your project repository.
-
 # Akello
 
 Akello is a transformative digital psychological assistant designed to be the ultimate, resourceful, and empathetic listener. This fully augmented, multilingual tool leverages advanced voice recognition and synthesis, customizable UI settings, and interactive modules to empower users on their journey toward self-discovery, healing, and personal growth.
