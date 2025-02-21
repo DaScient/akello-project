@@ -12,7 +12,7 @@
       --accent-color: #ff00ff;
       --text-shadow: 0 0 40px var(--primary-color), 0 0 80px var(--accent-color);
     }
-    /* Celestial, glowing, ultra-smooth background */
+    /* Celestial, Glowing Background */
     body {
       background: var(--bg-gradient);
       background-size: 400% 400%;
@@ -28,8 +28,8 @@
       overflow-x: hidden;
     }
     @keyframes gradientBG {
-      0%   { background-position: 0% 50%; }
-      50%  { background-position: 100% 50%; }
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
     h1 {
@@ -47,7 +47,7 @@
       flex-direction: column;
       gap: 40px;
     }
-    /* Hidden Settings Panel (with language, voice, UI controls) */
+    /* Hidden Settings Panel */
     #hiddenSettings {
       position: fixed;
       bottom: 20px;
@@ -93,7 +93,7 @@
     /* Daily Affirmation */
     #affirmation {
       background: rgba(255, 255, 255, 0.35);
-      border: 2px solid rgba(255, 255, 255, 0.7);
+      border: 2px solid rgba(255,255,255,0.7);
       border-radius: 20px;
       padding: 25px;
       font-size: 1.4em;
@@ -126,7 +126,7 @@
     }
     #conversation {
       background: rgba(255, 255, 255, 0.25);
-      border: 2px solid rgba(255, 255, 255, 0.45);
+      border: 2px solid rgba(255,255,255,0.45);
       border-radius: 25px;
       height: 600px;
       overflow-y: auto;
@@ -197,7 +197,7 @@
     }
     /* Journaling Section */
     #journal {
-      background: rgba(255, 255, 255, 0.3);
+      background: rgba(255,255,255,0.3);
       border: 2px solid rgba(255,255,255,0.6);
       border-radius: 20px;
       padding: 25px;
@@ -229,7 +229,7 @@
     }
     /* Reflective Journey Module */
     #reflectiveJourney {
-      background: rgba(0, 0, 0, 0.85);
+      background: rgba(0,0,0,0.85);
       border-radius: 25px;
       padding: 35px;
       box-shadow: 0 0 60px rgba(255,255,255,1);
@@ -324,10 +324,6 @@
         <input type="checkbox" id="translateToggle">
       </div>
       <div class="settingControl">
-        <button id="applySettings">Apply Settings</button>
-      </div>
-      <!-- Language Selector in Settings Panel -->
-      <div class="settingControl">
         <label for="langSelect">Language:</label>
         <select id="langSelect" aria-label="Select language">
           <option value="en-GB">English (British)</option>
@@ -341,6 +337,9 @@
           <option value="gd-GB">Gàidhlig (Celtic)</option>
           <option value="lt-LT">Lietuvių (Baltic)</option>
         </select>
+      </div>
+      <div class="settingControl">
+        <button id="applySettings">Apply Settings</button>
       </div>
     </div>
     <!-- Daily Affirmation -->
@@ -378,11 +377,10 @@
       <button id="nextQuestion" aria-label="Next question">Next</button>
     </div>
   </div>
-
+  
   <!-- Settings Toggle Button (Bottom Right) -->
   <button id="settingsToggle" title="Show Settings">⚙️</button>
 
-  <!-- JavaScript Section -->
   <script>
     // DOM Element References
     const conversation = document.getElementById('conversation');
@@ -413,12 +411,21 @@
       lang: langSelect.value
     };
 
-    // Placeholder Translation Function
+    // Translation Function: This is a simulated translation.
+    // To actually translate, integrate with a translation API like Google Cloud Translate.
     function translatePage(targetLang) {
       const translatableElements = document.querySelectorAll('.translatable');
       translatableElements.forEach(elem => {
-        // This demo appends a translation note.
-        elem.textContent = elem.textContent.replace(/\s\[Translated.*\]$/, "") + " [Translated to " + targetLang + "]";
+        if (!elem.hasAttribute('data-original')) {
+          elem.setAttribute('data-original', elem.innerText);
+        }
+        const originalText = elem.getAttribute('data-original');
+        // Simulate translation: For demonstration, convert text to uppercase for non-English languages.
+        if (targetLang !== "en-GB") {
+          elem.innerText = originalText.toUpperCase() + " [Simulated " + targetLang + " Translation]";
+        } else {
+          elem.innerText = originalText;
+        }
       });
     }
 
@@ -434,84 +441,77 @@
       alert("Voice & UI settings applied.");
     });
 
-    // Toggle Settings Panel Visibility
+    // Toggle Settings Panel
     settingsToggle.addEventListener('click', () => {
       hiddenSettings.classList.toggle('show');
     });
 
-    // Reflective Journey Module
-    const reflectiveQuestions = [
-      "What masks do you feel you are currently wearing in your daily interactions?",
-      "Which roles or personas do you believe you play, and why?",
-      "What illusions or stories do you tell yourself about your limitations?",
-      "How do these roles serve you, and in what ways might they be hindering you?",
-      "What negative patterns have you noticed recurring in your thoughts or behaviors?",
-      "What positive qualities or strengths do you sometimes overlook in yourself?",
-      "How do you truly feel when you remove these masks and speak your authentic truth?",
-      "What fears arise when you consider letting go of these roles?",
-      "How have these illusions shaped your relationships and self-image?",
-      "What does your higher self want you to know about your true potential and worth?"
-    ];
-    let reflectiveResponses = [];
-    let currentQuestionIndex = 0;
-    startReflective.addEventListener('click', () => {
-      reflectiveJourney.style.display = 'flex';
-      currentQuestionIndex = 0;
-      reflectiveResponses = [];
-      showReflectiveQuestion();
-    });
-    function showReflectiveQuestion() {
-      if (currentQuestionIndex < reflectiveQuestions.length) {
-        reflectiveQuestion.textContent = reflectiveQuestions[currentQuestionIndex];
-        reflectiveInput.value = "";
-        reflectiveInput.focus();
-      } else {
-        performReflectiveAnalysis();
-        reflectiveJourney.style.display = 'none';
-      }
-    }
-    nextQuestion.addEventListener('click', () => {
-      const answer = reflectiveInput.value.trim();
-      if (answer) {
-        reflectiveResponses.push(answer);
-        currentQuestionIndex++;
-        showReflectiveQuestion();
-      } else {
-        alert("Please share your honest reflection before moving on.");
-      }
-    });
-    function performReflectiveAnalysis() {
-      let negativePatterns = [];
-      let positivePatterns = [];
-      reflectiveResponses.forEach(response => {
-        if (response.toLowerCase().includes("fear") || response.toLowerCase().includes("can't") || response.toLowerCase().includes("fail") || response.toLowerCase().includes("not enough")) {
-          negativePatterns.push(response);
-        } else if (response.toLowerCase().includes("hope") || response.toLowerCase().includes("dream") || response.toLowerCase().includes("strength") || response.toLowerCase().includes("love")) {
-          positivePatterns.push(response);
-        }
-      });
-      let analysis = "Here is what your higher self sees:\n\n";
-      analysis += "Negative Patterns:\n";
-      analysis += negativePatterns.length ? negativePatterns.slice(0, 3).join("\n") : "None prominent.";
-      analysis += "\n\nPositive Patterns:\n";
-      analysis += positivePatterns.length ? positivePatterns.slice(0, 3).join("\n") : "Your inner light shines through.";
-      analysis += "\n\nDaily Affirmation: You are courageous, resilient, and worthy of all the love in the universe.";
-      analysis += "\n\nActionable Steps: Embrace moments of self-kindness, challenge negative beliefs, and celebrate every small victory.";
-      analysis += "\n\nMessage from Your Higher Self: Be bold, be authentic, and know that every step you take is a testament to your growth.";
-      addMessage(analysis, 'bot');
-      speak(analysis);
+    // Function: addMessage (Append a message bubble)
+    function addMessage(text, sender = 'bot') {
+      const msgDiv = document.createElement('div');
+      msgDiv.classList.add('message', sender);
+      msgDiv.textContent = text;
+      conversation.appendChild(msgDiv);
+      conversation.scrollTop = conversation.scrollHeight;
     }
 
-    // Save Journal Entry Event
-    saveJournal.addEventListener('click', () => {
-      const entry = journalEntry.value.trim();
-      if (entry) {
-        alert("Your journal entry has been saved. Every word is a step toward healing.");
-        journalEntry.value = '';
-      } else {
-        alert("Please write something in your journal before saving.");
+    // Process User Input
+    function processInput(input) {
+      const lowerInput = input.toLowerCase();
+      let response = "I hear the whispers of your heart. I'm here to support you—please share more of your inner world.";
+      if (lowerInput.includes("happy") || lowerInput.includes("joy") || lowerInput.includes("excited") || lowerInput.includes("elated")) {
+        response = "Your joy radiates like starlight! What delightful moments have painted your day with brilliance?";
+      } else if (lowerInput.includes("sad") || lowerInput.includes("depressed") || lowerInput.includes("lonely") || lowerInput.includes("grief") || lowerInput.includes("heartbroken")) {
+        response = "I feel the depth of your sorrow, and I am here to hold you in gentle compassion. What tender memory or thought might ease your heart right now?";
+      } else if (lowerInput.includes("anxious") || lowerInput.includes("nervous") || lowerInput.includes("worried") || lowerInput.includes("fear")) {
+        response = "It seems anxiety is softly knocking at your door. Let's take a deep, calming breath together. What might bring you a sense of peace right now?";
+      } else if (lowerInput.includes("stress") || lowerInput.includes("overwhelmed") || lowerInput.includes("pressure")) {
+        response = "When life feels heavy, even a small step forward is a triumph. What gentle action could help ease your burden at this moment?";
+      } else if (lowerInput.includes("thank") || lowerInput.includes("grateful") || lowerInput.includes("appreciate")) {
+        response = "Gratitude is like a gentle light warming the soul. What blessings, however subtle, have touched your heart today?";
+      } else if (lowerInput.includes("lost") || lowerInput.includes("alone") || lowerInput.includes("confused") || lowerInput.includes("aimless") || lowerInput.includes("directionless")) {
+        response = "In moments of uncertainty, every step is a precious part of your journey. What passion or dream sparks a hopeful flame within you?";
+      } else if (lowerInput.includes("why") || lowerInput.includes("meaning") || lowerInput.includes("purpose")) {
+        response = "The search for meaning is a beautiful quest. What insights have emerged on your path that we might explore together?";
+      } else if (lowerInput.includes("can't") || lowerInput.includes("fail") || lowerInput.includes("worthless") || lowerInput.includes("not enough")) {
+        response = "When self-doubt arises, remember that you are a radiant star in a vast universe. How might you embrace yourself with kindness today?";
+      } else if (lowerInput.includes("heal") || lowerInput.includes("recovery") || lowerInput.includes("growth") || lowerInput.includes("improve")) {
+        response = "Healing is a journey of gentle steps. What small act of self-love could nurture your spirit right now?";
+      } else if (lowerInput.includes("dream") || lowerInput.includes("imagine") || lowerInput.includes("vision")) {
+        response = "Your dreams are the tender blueprints of your heart’s desires. What visions dance within you, lifting your spirit higher?";
+      } else if (lowerInput.length > 20) {
+        response = "Thank you for sharing your inner truth. I'm here to listen deeply, explore your feelings, and help you find the beauty in your journey.";
       }
-    });
+      return response;
+    }
+
+    // Trigger Sparkle Animation
+    function triggerSparkle() {
+      const sparkle = document.createElement("div");
+      sparkle.className = "sparkle";
+      document.body.appendChild(sparkle);
+      setTimeout(() => sparkle.remove(), 1000);
+    }
+
+    // Speak Function (Using Web Speech API)
+    function speak(text) {
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = voiceSettings.lang;
+        const voices = speechSynthesis.getVoices();
+        let selectedVoice = voices.find(voice => voice.lang.startsWith(voiceSettings.lang) &&
+          voice.name.toLowerCase().includes(voiceSettings.gender));
+        if (!selectedVoice) {
+          selectedVoice = voices.find(voice => voice.lang.startsWith(voiceSettings.lang));
+        }
+        if (selectedVoice) {
+          utterance.voice = selectedVoice;
+        }
+        utterance.pitch = voiceSettings.pitch;
+        utterance.rate = voiceSettings.rate;
+        speechSynthesis.speak(utterance);
+      }
+    }
 
     // Chat Send Event
     sendBtn.addEventListener('click', () => {
@@ -556,14 +556,14 @@
       if (recognition) recognition.start();
     });
 
-    // Update recognition language on change.
+    // Update Recognition Language on Change
     langSelect.addEventListener('change', () => {
       voiceSettings.lang = langSelect.value;
       if (recognition) recognition.lang = voiceSettings.lang;
     });
 
     // Divine Welcome Message
-    addMessage("Welcome, dear soul. I am Akello—your divine psychologist. With maximum multilingual and voice capabilities and full customization at your fingertips, I am here to listen, guide, and empower you with grace and gentle strength. Adjust your settings, choose your language and theme, and let us embark on this transformative journey together.", 'bot');
+    addMessage("Welcome, dear soul. I am Akello—your divine psychologist. With maximum multilingual and voice capabilities, full customization, and a graceful, ethereal conversational approach, I am here to listen, guide, and empower you. Adjust your settings, choose your language, and let us embark on this transformative journey together.", 'bot');
 
     // Advanced Vocal Analytics (Simulated Placeholder)
     function analyzeVocalInput(audioData) {
